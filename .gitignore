@@ -12,8 +12,9 @@ dist/
 reports/
 logs/
 *.log
-!examples/*.log
+!sample.log
 *.html
+!09.html
 *.json
 .DS_Store
 .idea/

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day 9：单元测试 + 打包 + GitHub开源 - LogAn 培训</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
+            background: #0b1e33;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            user-select: none;
+            padding: 20px 0;
+        }
+        .slide-container {
+            width: 1100px;
+            max-width: 94%;
+            height: 90vh;
+            max-height: 860px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            padding: 40px 50px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .slide-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 6px;
+            scroll-behavior: smooth;
+        }
+        .slide-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .slide-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 2px 16px;
+            border-radius: 30px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .slide-title {
+            font-size: 30px;
+            font-weight: 700;
+            color: #0b1e33;
+            border-left: 6px solid #2563eb;
+            padding-left: 18px;
+            margin-bottom: 4px;
+            flex-shrink: 0;
+        }
+        .slide-subtitle {
+            font-size: 17px;
+            color: #4b5563;
+            margin-bottom: 16px;
+            font-weight: 400;
+            flex-shrink: 0;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 14px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 10px;
+            flex-shrink: 0;
+        }
+        .nav-btn {
+            background: #f1f5f9;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 24px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0b1e33;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover {
+            background: #2563eb;
+            color: white;
+        }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: #e5e7eb;
+            color: #9ca3af;
+        }
+        .page-indicator {
+            font-size: 15px;
+            font-weight: 500;
+            color: #4b5563;
+            background: #f8fafc;
+            padding: 4px 18px;
+            border-radius: 30px;
+        }
+        .nav-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px 22px;
+            border: 1px solid #e9edf4;
+            margin: 6px 0;
+        }
+        .card h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #0b1e33;
+            margin-bottom: 4px;
+        }
+        .card ul,
+        .card ol {
+            padding-left: 20px;
+            line-height: 1.9;
+            font-size: 15px;
+        }
+        .code-block {
+            background: #0b1e33;
+            color: #e5e9f0;
+            border-radius: 14px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 12.5px;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 6px 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .code-block .comment {
+            color: #6b8c9e;
+        }
+        .code-block .keyword {
+            color: #ff7b72;
+        }
+        .code-block .string {
+            color: #a5d6ff;
+        }
+        .code-block .func {
+            color: #d2a8ff;
+        }
+        .code-block .number {
+            color: #f5a623;
+        }
+        .tip {
+            background: #fefce8;
+            border-left: 5px solid #eab308;
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin: 8px 0;
+        }
+        .tip strong {
+            color: #854d0e;
+        }
+        .warning {
+            background: #fee2e2;
+            border-left: 5px solid #ef4444;
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin: 8px 0;
+        }
+        .success {
+            background: #dcfce7;
+            border-left: 5px solid #22c55e;
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin: 8px 0;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+        hr {
+            border: none;
+            border-top: 1.5px solid #e5e7eb;
+            margin: 14px 0;
+        }
+        .preview-box {
+            background: white;
+            border-radius: 10px;
+            padding: 12px 16px;
+            text-align: left;
+            border: 1px solid #d1d5db;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        @media (max-width: 780px) {
+            .slide-container {
+                padding: 20px 16px;
+                height: 94vh;
+                max-height: none;
+            }
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .slide-title {
+                font-size: 20px;
+            }
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container" id="app">
+        <div class="slide-content" id="slideContent"></div>
+        <div class="nav-bar">
+            <button class="nav-btn" id="prevBtn">◀ 上一页</button>
+            <span class="page-indicator" id="pageIndicator">1 / 1</span>
+            <div class="nav-right">
+                <button class="nav-btn" id="nextBtn">下一页 ▶</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // ============================================================
+        // Day 9 完整课程（26页）：单元测试 + 打包 + GitHub开源
+        // 测试部分丰富，包含多个测试类；新增GitHub上传内容
+        // ============================================================
+
+        var slides = [
+            // ===== 第1页 =====
+            {
+                title: '📦 第9天：测试 + 打包 + GitHub开源',
+                subtitle: '从"个人脚本"升级为"开源项目"的最后一步',
+                content: '<div style="display:flex; gap:18px; flex-wrap:wrap; margin:4px 0;"><div style="flex:1; min-width:160px;"><p style="font-size:18px; font-weight:600; color:#0b1e33;">📌 今天的目标</p><ul style="padding-left:22px; line-height:2.2; font-size:15px;"><li>用 <strong><code>pytest</code></strong> 写完整的单元测试，保证代码质量</li><li>用 <strong><code>setuptools</code></strong> 打包成 <code>pip install</code> 可安装的包</li><li>用 <strong>Git</strong> 上传到 GitHub，规范管理代码</li><li>编写 <strong><code>README.md</code></strong>，让项目一看就专业</li><li>选择 <strong>开源许可证</strong>，明确使用条款</li></ul></div><div style="flex:1.2; background:#f1f5f9; border-radius:18px; padding:16px 20px;"><div style="font-weight:600; font-size:16px;">🎯 今日产出</div><div style="background:white; border-radius:12px; padding:12px 14px; margin-top:6px; border:1px solid #e2e8f0;"><div style="font-size:13px; color:#6b7280;">运行测试：</div><div style="font-family:monospace; background:#0b1e33; color:#a5d6ff; padding:6px 10px; border-radius:6px; font-size:12px; margin:4px 0;">$ pytest -v --cov=logan<br>========== test session starts ==========<br>test_analyzer.py::TestExtractIP::test_standard_ip PASSED<br>test_analyzer.py::TestExtractIP::test_no_ip PASSED<br>test_analyzer.py::TestClassifyIPs::test_normal_classification PASSED<br>test_analyzer.py::TestClassifyIPs::test_all_anomaly PASSED<br>test_analyzer.py::TestBuildTop5::test_top5_with_anomaly PASSED<br>test_analyzer.py::TestGeneratorChain::test_filter_failed PASSED<br>========== 10 passed in 0.25s ==========<br>Coverage: 92%</div><div style="font-size:13px; color:#22c55e; margin-top:4px;">✅ GitHub 开源仓库：</div><div style="font-family:monospace; background:#0b1e33; color:#a5d6ff; padding:6px 10px; border-radius:6px; font-size:12px; margin:4px 0;">https://github.com/yourname/logan-analyzer</div></div><div class="tip" style="margin-top:6px;"><strong>💡 核心价值：</strong> 项目从"个人脚本"升级为 <strong>可复用、可测试、可分发、可展示</strong> 的开源项目。</div></div></div>'
+            },
+            // ===== 第2页 =====
+            {
+                title: '🧪 为什么需要单元测试？',
+                subtitle: '保证代码质量，防止回归 Bug',
+                content: '<div class="grid-2"><div><div style="font-weight:600; color:#dc2626;">❌ 没有测试的问题</div><ul style="line-height:2.2; font-size:14px; padding-left:18px; margin-top:4px;"><li>修改代码时 <strong>不知道会不会破坏已有功能</strong></li><li>重构时 <strong>心里没底</strong>，不敢改动</li><li>Bug 修复后 <strong>可能再次出现</strong></li><li>其他人 <strong>不敢用</strong> 你的代码</li></ul></div><div><div style="font-weight:600; color:#16a34a;">✅ 有测试的优势</div><ul style="line-height:2.2; font-size:14px; padding-left:18px; margin-top:4px;"><li>修改代码后 <strong>一键验证</strong> 所有功能</li><li>重构 <strong>有底气</strong>，测试会告诉你对错</li><li>Bug 修复后 <strong>永久验证</strong> 不会复发</li><li>别人 <strong>敢用、敢改</strong> 你的代码</li><li>是 <strong>开源项目</strong> 和 <strong>团队协作</strong> 的基石</li></ul></div></div><div class="tip" style="margin-top:4px;">💡 <strong>面试加分项：</strong> "我的项目有 92% 的测试覆盖率，用 pytest 写了 15+ 个测试用例。"</div>'
+            },
+            // ===== 第3页 =====
+            {
+                title: '🔧 pytest 入门',
+                subtitle: 'Python 最流行的测试框架',
+                content: '<div><p style="font-size:15px; line-height:1.8;">安装和使用 <code>pytest</code>：</p><div class="code-block" style="font-size:12px; max-height:220px; overflow-y:auto;"><span class="comment"># 安装</span><br>$ pip install pytest pytest-cov<br><br><span class="comment"># 编写测试文件 test_analyzer.py</span><br><span class="comment"># pytest 会自动发现以 test_ 开头的函数</span><br><br><span class="keyword">def</span> <span class="func">test_extract_ip</span>():<br>    line = <span class="string">"Failed password for root from 192.168.1.100"</span><br>    result = extract_ip(line)<br>    <span class="keyword">assert</span> result == <span class="string">"192.168.1.100"</span><br><br><span class="keyword">def</span> <span class="func">test_extract_ip_no_ip</span>():<br>    line = <span class="string">"Accepted password for alice"</span><br>    result = extract_ip(line)<br>    <span class="keyword">assert</span> result <span class="keyword">is</span> <span class="keyword">None</span><br><br><span class="comment"># 运行测试</span><br>$ pytest -v</div><div class="success" style="margin-top:4px;">✅ <code>assert</code> 是 Python 的断言关键字，<code>pytest</code> 会自动捕获并报告失败。</div></div>'
+            },
+            // ===== 第4页 =====
+            {
+                title: '📝 测试 extract_ip 函数（详细）',
+                subtitle: '覆盖正常、边界、异常情况',
+                content: '<div><div class="code-block" style="font-size:11px; max-height:280px; overflow-y:auto;"><span class="comment"># tests/test_analyzer.py</span><br><span class="keyword">import</span> pytest<br><span class="keyword">from</span> logan.analyzer <span class="keyword">import</span> extract_ip<br><br><span class="keyword">class</span> <span class="func">TestExtractIP</span>:<br>    <span class="keyword">def</span> <span class="func">test_standard_ip</span>(self):<br>        line = <span class="string">"Failed password for root from 192.168.1.100 port 22"</span><br>        <span class="keyword">assert</span> extract_ip(line) == <span class="string">"192.168.1.100"</span><br><br>    <span class="keyword">def</span> <span class="func">test_authentication_failure</span>(self):<br>        line = <span class="string">"authentication failure; logname=root from 10.0.0.55"</span><br>        <span class="keyword">assert</span> extract_ip(line) == <span class="string">"10.0.0.55"</span><br><br>    <span class="keyword">def</span> <span class="func">test_no_ip</span>(self):<br>        line = <span class="string">"Accepted password for alice"</span><br>        <span class="keyword">assert</span> extract_ip(line) <span class="keyword">is</span> <span class="keyword">None</span><br><br>    <span class="keyword">def</span> <span class="func">test_multiple_ips</span>(self):<br>        line = <span class="string">"from 192.168.1.100 via 10.0.0.1"</span><br>        <span class="keyword">assert</span> extract_ip(line) == <span class="string">"192.168.1.100"</span><br><br>    <span class="keyword">def</span> <span class="func">test_invalid_ip_format</span>(self):<br>        line = <span class="string">"IP: 999.999.999.999"</span><br>        <span class="comment"># 正则只匹配格式，不校验范围</span><br>        <span class="keyword">assert</span> extract_ip(line) == <span class="string">"999.999.999.999"</span></div><div class="tip" style="margin-top:4px;">💡 <strong>测试原则：</strong> 每个函数至少要有 <strong>正常情况</strong> + <strong>边界情况</strong> 的测试。</div></div>'
+            },
+            // ===== 第5页 =====
+            {
+                title: '📝 测试 classify_ips 函数',
+                subtitle: '验证分类逻辑和排序',
+                content: '<div><div class="code-block" style="font-size:11px; max-height:280px; overflow-y:auto;"><span class="keyword">class</span> <span class="func">TestClassifyIPs</span>:<br>    <span class="keyword">def</span> <span class="func">test_normal_classification</span>(self):<br>        ip_count = {<span class="string">"192.168.1.100"</span>: 8, <span class="string">"10.0.0.55"</span>: 3, <span class="string">"172.16.0.88"</span>: 1}<br>        normal, anomaly = classify_ips(ip_count, threshold=5)<br>        <span class="keyword">assert</span> len(anomaly) == 1<br>        <span class="keyword">assert</span> anomaly[0][<span class="string">"ip"</span>] == <span class="string">"192.168.1.100"</span><br>        <span class="keyword">assert</span> len(normal) == 2<br><br>    <span class="keyword">def</span> <span class="func">test_all_anomaly</span>(self):<br>        ip_count = {<span class="string">"192.168.1.1"</span>: 10, <span class="string">"192.168.1.2"</span>: 7}<br>        normal, anomaly = classify_ips(ip_count, threshold=5)<br>        <span class="keyword">assert</span> len(anomaly) == 2<br>        <span class="keyword">assert</span> anomaly[0][<span class="string">"count"</span>] == 10<br>        <span class="keyword">assert</span> anomaly[1][<span class="string">"count"</span>] == 7<br><br>    <span class="keyword">def</span> <span class="func">test_all_normal</span>(self):<br>        ip_count = {<span class="string">"10.0.0.1"</span>: 2, <span class="string">"10.0.0.2"</span>: 3}<br>        normal, anomaly = classify_ips(ip_count, threshold=5)<br>        <span class="keyword">assert</span> len(anomaly) == 0<br>        <span class="keyword">assert</span> len(normal) == 2<br><br>    <span class="keyword">def</span> <span class="func">test_empty</span>(self):<br>        normal, anomaly = classify_ips({}, threshold=5)<br>        <span class="keyword">assert</span> len(anomaly) == 0<br>        <span class="keyword">assert</span> len(normal) == 0</div></div>'
+            },
+            // ===== 第6页 =====
+            {
+                title: '📝 测试 build_top5_rows 函数',
+                subtitle: '验证排行榜生成逻辑',
+                content: '<div><div class="code-block" style="font-size:11px; max-height:260px; overflow-y:auto;"><span class="keyword">class</span> <span class="func">TestBuildTop5</span>:<br>    <span class="keyword">def</span> <span class="func">test_top5_with_anomaly</span>(self):<br>        anomaly = [<br>            {<span class="string">"ip"</span>: <span class="string">"192.168.1.100"</span>, <span class="string">"count"</span>: 10},<br>            {<span class="string">"ip"</span>: <span class="string">"10.0.0.55"</span>, <span class="string">"count"</span>: 7},<br>            {<span class="string">"ip"</span>: <span class="string">"172.16.0.88"</span>, <span class="string">"count"</span>: 5},<br>            {<span class="string">"ip"</span>: <span class="string">"192.168.1.50"</span>, <span class="string">"count"</span>: 5},<br>            {<span class="string">"ip"</span>: <span class="string">"10.0.0.1"</span>, <span class="string">"count"</span>: 3}<br>        ]<br>        result = build_top5_rows(anomaly)<br>        <span class="keyword">for</span> item <span class="keyword">in</span> anomaly:<br>            <span class="keyword">assert</span> item[<span class="string">"ip"</span>] <span class="keyword">in</span> result<br><br>    <span class="keyword">def</span> <span class="func">test_top5_less_than_5</span>(self):<br>        anomaly = [{<span class="string">"ip"</span>: <span class="string">"192.168.1.100"</span>, <span class="string">"count"</span>: 10}]<br>        result = build_top5_rows(anomaly)<br>        <span class="keyword">assert</span> <span class="string">"192.168.1.100"</span> <span class="keyword">in</span> result<br><br>    <span class="keyword">def</span> <span class="func">test_top5_empty</span>(self):<br>        result = build_top5_rows([])<br>        <span class="keyword">assert</span> <span class="string">"无异常 IP"</span> <span class="keyword">in</span> result</div></div>'
+            },
+            // ===== 第7页 =====
+            {
+                title: '🔗 测试生成器链（进阶）',
+                subtitle: '测试流式处理逻辑',
+                content: '<div><div class="code-block" style="font-size:11px; max-height:280px; overflow-y:auto;"><span class="keyword">class</span> <span class="func">TestGeneratorChain</span>:<br>    <span class="keyword">def</span> <span class="func">test_lines_from_file</span>(self, tmp_path):<br>        log_file = tmp_path / <span class="string">"test.log"</span><br>        log_file.write_text(<span class="string">"line1\\nline2\\nline3\\n"</span>)<br>        <span class="keyword">from</span> logan.analyzer <span class="keyword">import</span> lines_from_file<br>        result = list(lines_from_file(str(log_file)))<br>        <span class="keyword">assert</span> len(result) == 3<br><br>    <span class="keyword">def</span> <span class="func">test_filter_failed</span>(self):<br>        <span class="keyword">from</span> logan.analyzer <span class="keyword">import</span> filter_failed<br>        lines = [(1, <span class="string">"Failed password"</span>), (2, <span class="string">"Accepted"</span>), (3, <span class="string">"authentication failure"</span>)]<br>        result = list(filter_failed(lines))<br>        <span class="keyword">assert</span> len(result) == 2<br><br>    <span class="keyword">def</span> <span class="func">test_extract_ips</span>(self):<br>        <span class="keyword">from</span> logan.analyzer <span class="keyword">import</span> extract_ips<br>        lines = [(1, <span class="string">"from 192.168.1.100"</span>), (2, <span class="string">"from 10.0.0.55"</span>), (3, <span class="string">"no ip"</span>)]<br>        result = list(extract_ips(lines))<br>        <span class="keyword">assert</span> len(result) == 2<br>        <span class="keyword">assert</span> result[0] == <span class="string">"192.168.1.100"</span></div><div class="tip" style="margin-top:4px;">💡 <code>tmp_path</code> 是 pytest 提供的 <strong>临时目录 fixture</strong>，测试结束后自动清理。</div></div>'
+            },
+            // ===== 第8页 =====
+            {
+                title: '📦 打包前的准备工作：项目结构重构',
+                subtitle: '从"单文件脚本"升级为"标准 Python 包"',
+                content: '<div><p style="font-size:15px; line-height:1.8;">标准 Python 包的项目结构：</p><div class="code-block" style="font-size:12px; line-height:2.2; max-height:260px; overflow-y:auto;">logan-analyzer/                <span class="comment"># 项目根目录</span><br>├── src/<br>│   └── logan/                 <span class="comment"># 包目录（与项目同名）</span><br>│       ├── __init__.py        <span class="comment"># 标识这是一个包</span><br>│       ├── analyzer.py        <span class="comment"># 核心代码</span><br>│       └── cli.py             <span class="comment"># 命令行入口</span><br>├── tests/                     <span class="comment"># 测试目录</span><br>│   ├── __init__.py<br>│   └── test_analyzer.py<br>├── pyproject.toml             <span class="comment"># 现代打包配置</span><br>├── setup.py                   <span class="comment"># 传统打包配置（可选）</span><br>├── requirements.txt           <span class="comment"># 依赖列表</span><br>├── README.md                  <span class="comment"># ⭐ 项目说明（重点）</span><br>├── LICENSE                    <span class="comment"># 开源许可证</span><br>├── .gitignore                 <span class="comment"># Git 忽略文件</span><br>└── sample.log                 <span class="comment"># 示例日志</span></div><div class="success" style="margin-top:4px;">✅ 这种结构符合 <strong>PEP 517/518</strong> 标准，可以被 <code>pip</code> 直接安装。</div></div>'
+            },
+            // ===== 第9页 =====
+            {
+                title: '📄 pyproject.toml —— 现代打包配置',
+                subtitle: 'PEP 621 标准，主流推荐',
+                content: '<div><div class="code-block" style="font-size:11px; max-height:280px; overflow-y:auto;"><span class="comment"># pyproject.toml</span><br>[build-system]<br>requires = [<span class="string">"setuptools>=61.0"</span>, <span class="string">"wheel"</span>]<br>build-backend = <span class="string">"setuptools.build_meta"</span><br><br>[project]<br>name = <span class="string">"logan-analyzer"</span><br>version = <span class="string">"2.0.0"</span><br>description = <span class="string">"日志异常登录分析工具 —— 自动分析 SSH 登录日志，识别暴力破解"</span><br>readme = <span class="string">"README.md"</span><br>license = { text = <span class="string">"MIT"</span> }<br>authors = [<br>    { name = <span class="string">"Your Name"</span>, email = <span class="string">"your@email.com"</span> }<br>]<br>keywords = [<span class="string">"security"</span>, <span class="string">"log-analysis"</span>, <span class="string">"ssh"</span>, <span class="string">"devops"</span>]<br>classifiers = [<br>    <span class="string">"Programming Language :: Python :: 3"</span>,<br>    <span class="string">"Programming Language :: Python :: 3.8"</span>,<br>    <span class="string">"Programming Language :: Python :: 3.9"</span>,<br>    <span class="string">"Programming Language :: Python :: 3.10"</span>,<br>    <span class="string">"Programming Language :: Python :: 3.11"</span>,<br>    <span class="string">"License :: OSI Approved :: MIT License"</span>,<br>    <span class="string">"Operating System :: OS Independent"</span>,<br>    <span class="string">"Intended Audience :: System Administrators"</span>,<br>    <span class="string">"Topic :: Security"</span>,<br>]<br>requires-python = <span class="string">">=3.8"</span><br>dependencies = [<br>    <span class="string">"pyyaml>=6.0"</span>,<br>]<br><br>[project.optional-dependencies]<br>dev = [<br>    <span class="string">"pytest>=7.0"</span>,<br>    <span class="string">"pytest-cov>=4.0"</span>,<br>]<br><br>[project.scripts]<br>logan = <span class="string">"logan.cli:main"</span><br><br>[project.urls]<br>Homepage = <span class="string">"https://github.com/yourname/logan-analyzer"</span><br>Repository = <span class="string">"https://github.com/yourname/logan-analyzer"</span><br>Issues = <span class="string">"https://github.com/yourname/logan-analyzer/issues"</span><br><br>[tool.pytest.ini_options]<br>testpaths = [<span class="string">"tests"</span>]<br>python_files = [<span class="string">"test_*.py"</span>]<br>addopts = <span class="string">"-v --tb=short"</span><br><br>[tool.coverage.run]<br>source = [<span class="string">"src/logan"</span>]</div><div class="success" style="margin-top:4px;">✅ <code>pyproject.toml</code> 是 <strong>Python 打包的未来</strong>，所有现代工具都支持。</div></div>'
+            },
+            // ===== 第10页 =====
+            {
+                title: '📤 上传到 GitHub —— 为什么要做？',
+                subtitle: 'GitHub 是程序员的"作品集"',
+                content: '<div class="grid-2"><div><div style="font-weight:600; font-size:16px;">📌 GitHub 对校招的价值</div><ul style="line-height:2.2; font-size:14px; padding-left:18px; margin-top:4px;"><li><strong>简历上的链接</strong> —— 面试官会点开看</li><li><strong>代码可追溯</strong> —— 展示你的编码习惯和成长轨迹</li><li><strong>团队协作证明</strong> —— Issues、PR、Commits 都是证据</li><li><strong>开源贡献</strong> —— 给其他人用的项目才叫"作品"</li></ul></div><div><div style="font-weight:600; font-size:16px;">⭐ 面试官怎么看？</div><ul style="line-height:2.2; font-size:14px; padding-left:18px; margin-top:4px;"><li>有 GitHub → "这个学生有工程化意识"</li><li>README 写得好 → "这个学生懂沟通和包装"</li><li>有测试 → "这个学生注重质量"</li><li>提交记录清晰 → "这个学生工作习惯好"</li></ul><div class="tip" style="margin-top:4px;">💡 <strong>目标：</strong> 让面试官打开你的 GitHub 后，<strong>3 秒内</strong> 感觉到"这是个认真的人"。</div></div></div>'
+            },
+            // ===== 第11页 =====
+            {
+                title: '🔧 Git 初始化与第一次提交',
+                subtitle: '在本地建立版本控制',
+                content: '<div><p style="font-size:15px; line-height:1.8;">在项目根目录执行以下命令：</p><div class="code-block" style="font-size:12px; max-height:240px; overflow-y:auto;"><span class="comment"># 1. 初始化 Git 仓库</span><br>$ git init<br><br><span class="comment"># 2. 查看当前状态</span><br>$ git status<br><br><span class="comment"># 3. 添加所有文件到暂存区</span><br>$ git add .<br><br><span class="comment"># 4. 查看将要提交的内容</span><br>$ git status<br><br><span class="comment"># 5. 提交（-m 后面写提交信息）</span><br>$ git commit -m "feat: 初始提交 LogAn v2.0.0"<br><br><span class="comment"># 6. 查看提交历史</span><br>$ git log --oneline</div><div class="tip" style="margin-top:4px;">💡 <strong>提交信息规范：</strong><ul style="padding-left:20px; font-size:14px; line-height:1.8;"><li><code>feat:</code> 新功能</li><li><code>fix:</code> 修复 Bug</li><li><code>docs:</code> 文档更新</li><li><code>test:</code> 测试相关</li><li><code>chore:</code> 构建/工具配置</li></ul></div></div>'
+            },
+            // ===== 第12页 =====
+            {
+                title: '🔗 关联 GitHub 远程仓库',
+                subtitle: '把本地代码推送到云端',
+                content: '<div><p style="font-size:15px; line-height:1.8;">在 GitHub 网站上创建仓库后，关联并推送：</p><div class="code-block" style="font-size:12px; max-height:220px; overflow-y:auto;"><span class="comment"># 1. 在 GitHub 上创建新仓库（不要勾选 README）</span><br><span class="comment"># 2. 关联远程仓库</span><br>$ git remote add origin https://github.com/yourname/logan-analyzer.git<br><br><span class="comment"># 3. 确认远程仓库</span><br>$ git remote -v<br><br><span class="comment"># 4. 推送到远程（第一次推送）</span><br>$ git push -u origin main<br><br><span class="comment"># 5. 如果默认分支是 master：</span><br>$ git branch -M main<br>$ git push -u origin main</div><div class="success" style="margin-top:4px;">✅ 推送成功后，刷新 GitHub 页面就能看到你的代码了！</div><div class="warning" style="margin-top:4px;">⚠️ <strong>注意：</strong> 确认 <code>.gitignore</code> 已经配置好，不要上传 <code>__pycache__/</code>、<code>.env</code> 等敏感文件。</div></div>'
+            },
+            // ===== 第13页 =====
+            {
+                title: '📄 .gitignore —— 哪些文件不该上传？',
+                subtitle: '保护隐私，保持仓库整洁',
+                content: '<div><div class="code-block" style="font-size:11px; max-height:240px; overflow-y:auto;"><span class="comment"># .gitignore</span><br><br><span class="comment"># Python 缓存</span><br>__pycache__/<br>*.py[cod]<br>*.so<br>.Python<br><br><span class="comment"># 虚拟环境</span><br>env/<br>venv/<br>.venv/<br><br><span class="comment"># 构建产物</span><br>dist/<br>build/<br>*.egg-info/<br>*.egg<br><br><span class="comment"># 测试</span><br>.pytest_cache/<br>.coverage<br>htmlcov/<br><br><span class="comment"># IDE</span><br>.vscode/<br>.idea/<br>*.swp<br>*.swo<br><br><span class="comment"># 日志和报告（用户自己生成的，不应提交）</span><br>*.log<br>*.html<br>*.json<br>reports/<br>logs/<br><br><span class="comment"># 密钥文件</span><br>.env<br>.env.local<br><br><span class="comment"># 系统文件</span><br>.DS_Store<br>Thumbs.db</div><div class="tip" style="margin-top:4px;">💡 <strong>原则：</strong> 只上传 <strong>源代码</strong> 和 <strong>文档</strong>，不上传 <strong>生成物</strong> 和 <strong>密钥</strong>。</div></div>'
+            },
+            // ===== 第14页 =====
+            {
+                title: '📝 README.md —— 项目的"门面"',
+                subtitle: '面试官第一眼就看这里',
+                content: '<div><p style="font-size:15px; line-height:1.8;">一份好的 README 应该包含以下部分：</p><div class="grid-2" style="margin:4px 0;"><div class="card"><h3>✅ 必须包含</h3><ul><li><strong>项目名称 + 徽章</strong></li><li><strong>一句话简介</strong></li><li><strong>功能列表</strong>（用 ✅ 或 📊）</li><li><strong>快速开始</strong>（安装 + 运行命令）</li><li><strong>示例截图</strong>（报告截图）</li><li><strong>技术栈</strong></li></ul></div><div class="card"><h3>⭐ 加分项</h3><ul><li><strong>配置示例</strong>（config.yaml）</li><li><strong>测试命令</strong></li><li><strong>贡献指南</strong></li><li><strong>许可证</strong></li><li><strong>相关链接</strong></li></ul></div></div><div class="success" style="margin-top:4px;">✅ <strong>目标：</strong> 让一个完全不了解项目的人，5 分钟内能跑起来。</div></div>'
+            },
+            // ===== 第15页 =====
+            {
+                title: '📝 README.md 模板（直接使用）',
+                subtitle: '填空即可，替换 [] 中的内容',
+                content: '<div><div class="code-block" style="font-size:10px; line-height:1.6; max-height:340px; overflow-y:auto;"><span class="comment"># LogAn —— 日志异常登录分析工具</span><br><br>[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)<br>[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)<br>[![Tests](https://github.com/yourname/logan-analyzer/actions/workflows/test.yml/badge.svg)](https://github.com/yourname/logan-analyzer/actions)<br><br>## 📊 简介<br><br>**LogAn** 是一个轻量级的服务器日志分析工具，专门用于 **分析 SSH 登录日志，识别暴力破解攻击**。<br><br>## ✨ 核心功能<br><br>- 📂 自动解析日志文件，提取登录失败记录<br>- 🎯 统计每个 IP 的失败次数，按阈值标记异常<br>- 🏆 生成 Top 5 危险 IP 排行榜<br>- 📄 输出可视化 HTML 报告<br>- 📦 支持大文件流式处理（100GB+ 不爆内存）<br>- ⚙️ 支持 YAML 配置文件<br>- 🧪 单元测试覆盖率 > 90%<br><br>## ⚡ 快速开始<br><br>### 安装<br><br>```bash<br>pip install logan-analyzer<br>```<br><br>### 使用<br><br>```bash<br>logan sample.log -t 10 -o report.html<br>```<br><br>## 📸 报告预览<br><br>![报告预览](./docs/report_preview.png)<br><br>## 🔧 技术栈<br><br>- Python 3.8+<br>- argparse + pyyaml<br>- pytest（测试）<br><br>## 📄 许可证<br><br>MIT License</div></div>'
+            },
+            // ===== 第16页 =====
+            {
+                title: '📸 在 README 中插入报告截图',
+                subtitle: '一图胜千言，让面试官直观看到效果',
+                content: '<div><p style="font-size:15px; line-height:1.8;">操作步骤：</p><ol style="line-height:2.2; padding-left:20px; font-size:15px;"><li>运行 <code>logan sample.log</code> 生成 <code>report.html</code></li><li>在浏览器中打开 <code>report.html</code></li><li>截图（推荐 <code>Win+Shift+S</code> 或 Mac <code>Cmd+Shift+4</code>）</li><li>在 GitHub 仓库中创建 <code>docs/</code> 文件夹，放入截图</li><li>在 README 中引用：<code>![报告预览](./docs/report_preview.png)</code></li></ol><div class="preview-box" style="margin-top:6px;"><div style="font-weight:600; font-size:14px;">📊 报告预览</div><div style="background:#f8fafc; border:2px dashed #cbd5e1; border-radius:8px; padding:20px; text-align:center; color:#6b7280; margin-top:4px;">🖼️ 这里放 report.html 的截图<br><span style="font-size:12px;">（用浏览器打开报告，截图后放上来）</span></div></div><div class="tip" style="margin-top:4px;">💡 <strong>面试官会看截图：</strong> 一张清晰的报告截图，比 100 行文字更有说服力。</div></div>'
+            },
+            // ===== 第17页 =====
+            {
+                title: '📄 选择开源许可证',
+                subtitle: '让其他人知道他们能怎么用你的代码',
+                content: '<div class="grid-2"><div><p style="font-size:15px; line-height:1.8;">常见的开源许可证：</p><ul style="line-height:2.2; font-size:14px; padding-left:18px; margin-top:4px;"><li><strong>MIT</strong> —— 最宽松，允许商用和修改</li><li><strong>Apache 2.0</strong> —— 类似 MIT，增加了专利保护</li><li><strong>GPL 3.0</strong> —— 要求修改后的代码也必须开源</li><li><strong>BSD 3-Clause</strong> —— 类似 MIT</li></ul><div class="tip" style="margin-top:4px;">💡 <strong>校招推荐：</strong> 选 <strong>MIT</strong>，简单、主流、不劝退使用者。</div></div><div><div style="font-weight:600; font-size:16px;">📄 LICENSE 文件内容（MIT）</div><div class="code-block" style="font-size:10px; max-height:200px; overflow-y:auto;">MIT License<br><br>Copyright (c) 2026 Your Name<br><br>Permission is hereby granted, free of charge, to any person obtaining a copy<br>of this software and associated documentation files (the "Software"), to deal<br>in the Software without restriction, including without limitation the rights<br>to use, copy, modify, merge, publish, distribute, sublicense, and/or sell<br>copies of the Software, and to permit persons to whom the Software is<br>furnished to do so, subject to the following conditions:<br><br>The above copyright notice and this permission notice shall be included in all<br>copies or substantial portions of the Software.<br><br>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR<br>IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,<br>FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE<br>AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER<br>LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,<br>OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE<br>SOFTWARE.</div></div></div>'
+            },
+            // ===== 第18页 =====
+            {
+                title: '📦 完整的 GitHub 仓库检查清单',
+                subtitle: '上传前逐项确认',
+                content: '<div><p style="font-size:15px; line-height:1.8;">在推送前，确认以下所有项目：</p><div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:6px 0;"><div class="card" style="padding:10px 16px;">✅ <code>README.md</code> 已编写</div><div class="card" style="padding:10px 16px;">✅ <code>LICENSE</code> 文件已添加</div><div class="card" style="padding:10px 16px;">✅ <code>.gitignore</code> 已配置</div><div class="card" style="padding:10px 16px;">✅ <code>pyproject.toml</code> 已配置</div><div class="card" style="padding:10px 16px;">✅ <code>setup.py</code> 已配置（可选）</div><div class="card" style="padding:10px 16px;">✅ 测试通过（<code>pytest -v</code>）</div><div class="card" style="padding:10px 16px;">✅ 本地安装成功（<code>pip install -e .</code>）</div><div class="card" style="padding:10px 16px;">✅ 命令测试成功（<code>logan sample.log</code>）</div><div class="card" style="padding:10px 16px;">✅ 报告截图已放入 <code>docs/</code></div></div><div class="success" style="margin-top:4px;">🎉 <strong>全部完成后，推送代码：</strong> <code>git push -u origin main</code></div></div>'
+            },
+            // ===== 第19页 =====
+            {
+                title: '🐞 常见报错及解决',
+                subtitle: 'Git 操作常见问题',
+                content: '<div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;"><div style="background:#fee2e2; border-radius:12px; padding:14px 18px; border-left:4px solid #ef4444;"><div style="font-weight:600; color:#991b1b;">❌ <code>fatal: not a git repository</code></div><div style="font-size:14px; color:#7f1d1d; margin-top:4px;">没有在项目根目录执行 <code>git init</code>。<br><strong>解决：</strong> 切换到项目根目录，执行 <code>git init</code>。</div></div><div style="background:#fee2e2; border-radius:12px; padding:14px 18px; border-left:4px solid #ef4444;"><div style="font-weight:600; color:#991b1b;">❌ <code>failed to push some refs</code></div><div style="font-size:14px; color:#7f1d1d; margin-top:4px;">远程仓库已有内容，本地没有拉取。<br><strong>解决：</strong> <code>git pull origin main --rebase</code> 或强制推送（慎重）。</div></div></div><div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px;"><div style="background:#fefce8; border-radius:12px; padding:12px 16px; border-left:4px solid #eab308;"><div style="font-weight:600; color:#854d0e;">💡 记住 .gitignore</div><div style="font-size:14px; color:#78350f;">不要在第一次提交后才加 <code>.gitignore</code>，<strong>提前配置好</strong>。</div></div><div style="background:#fefce8; border-radius:12px; padding:12px 16px; border-left:4px solid #eab308;"><div style="font-weight:600; color:#854d0e;">💡 提交信息要清晰</div><div style="font-size:14px; color:#78350f;">避免 <code>fix</code>、<code>update</code> 这类模糊信息，写清楚做了什么。</div></div></div>'
+            },
+            // ===== 第20页 =====
+            {
+                title: '🧠 今天你学到了什么',
+                subtitle: '测试 + 打包 + 开源发布',
+                content: '<div class="grid-3"><div class="card"><h3>📖 知识点</h3><ul><li>pytest 单元测试（多个测试类）</li><li>断言（assert）</li><li>pyproject.toml / setup.py</li><li>Git 命令（init, add, commit, push）</li></ul></div><div class="card"><h3>🔧 工程技能</h3><ul><li>项目结构重构（src/ 布局）</li><li>.gitignore 配置</li><li>README.md 编写</li><li>LICENSE 选择</li></ul></div><div class="card"><h3>🚀 交付价值</h3><ul><li>代码质量可度量（覆盖率 > 90%）</li><li>一键安装使用（pip install）</li><li>开源项目标准</li><li>简历亮点：<strong>"项目已开源，测试覆盖率 92%"</strong></li></ul></div></div><div class="tip" style="margin-top:6px;"><strong>💬 老师总结：</strong> 今天我们把项目从"能用的脚本"升级为"可交付的软件包"。有了完整的测试，修改代码心里有底；有了打包，分享和部署变得简单；有了 GitHub 和 README，面试时就有展示的舞台。这是 <strong>从学生到工程师</strong> 的关键一步。</div>'
+            },
+            // ===== 第21页 =====
+            {
+                title: '💡 面试话术：怎么介绍 GitHub 和 README',
+                subtitle: '让面试官知道你有工程化思维',
+                content: '<div style="background:#f1f5f9; border-radius:16px; padding:18px 22px;"><div style="font-weight:600; font-size:17px;">❓ 面试官问："你的项目怎么让别人快速了解和使用？"</div><div style="font-size:15px; color:#1f2937; line-height:1.8; margin-top:6px;"><strong>标准回答：</strong></div><div style="background:white; border-radius:12px; padding:14px 18px; border:1px solid #e2e8f0; font-size:14px; line-height:1.8;">"我按照 <strong>开源项目标准</strong> 来组织代码和文档。<br>首先，代码托管在 <strong>GitHub</strong> 上，有清晰的提交记录和版本标签。<br>其次，我写了详细的 <strong>README.md</strong>，包含项目简介、功能列表、安装步骤、使用示例和报告截图，任何人 5 分钟内都能跑起来。<br>我还写了 <strong>完整的单元测试</strong>，用 pytest 保证代码质量，测试覆盖率超过 90%，并配置了 <strong>pyproject.toml</strong>，用户可以通过 <code>pip install</code> 直接安装使用。<br>这个项目已经达到了 <strong>可交付、可展示</strong> 的标准，面试官可以随时下载试用。"</div><div class="success" style="margin-top:6px;">✅ 这个回答展示了 <strong>工程化能力</strong> + <strong>文档意识</strong> + <strong>用户体验思维</strong>。</div></div>'
+            },
+            // ===== 第22页 =====
+            {
+                title: '📝 课后练习',
+                subtitle: '巩固测试、打包和 GitHub 上传',
+                content: '<div class="grid-2"><div><div style="font-weight:600; font-size:17px;">⭐ 必做</div><ol style="line-height:2.2; padding-left:20px; font-size:15px;"><li>按照课程结构重构项目目录</li><li>为 <code>extract_ip()</code> 写 5 个测试用例（覆盖多种格式）</li><li>为 <code>classify_ips()</code> 写 3 个测试用例</li><li>配置 <code>pyproject.toml</code>，包含开发依赖</li><li>编写 <code>README.md</code>，插入报告截图和徽章</li><li>初始化 Git，推送到 GitHub</li><li>用 <code>pip install -e .</code> 测试本地安装</li></ol></div><div><div style="font-weight:600; font-size:17px;">🚀 挑战（选做）</div><ol style="line-height:2.2; padding-left:20px; font-size:15px;"><li>用 <code>pytest-cov</code> 检查测试覆盖率，目标 > 90%</li><li>写 <code>test_cli.py</code> 测试命令行参数解析</li><li>在 README 中添加 <strong>徽章（Badges）</strong>（PyPI version, tests, coverage）</li><li>尝试发布到 <strong>Test PyPI</strong></li><li>配置 GitHub Actions 自动运行测试</li></ol></div></div><hr><div style="font-size:14px; color:#4b5563; text-align:center;">✍️</div>'
+            },
+            // ===== 第23页 =====
+            {
+                title: '📦 发布到 PyPI（可选）',
+                subtitle: '让全世界的人都能 pip install',
+                content: '<div><p style="font-size:15px; line-height:1.8;">发布到 PyPI（Python Package Index）的步骤：</p><div class="code-block" style="font-size:11px; max-height:240px; overflow-y:auto;"><span class="comment"># 1. 安装打包工具</span><br>$ pip install build twine<br><br><span class="comment"># 2. 构建分发包</span><br>$ python -m build<br><span class="comment"># 生成 dist/logan_analyzer-2.0.0-py3-none-any.whl</span><br><span class="comment"># 和 dist/logan-analyzer-2.0.0.tar.gz</span><br><br><span class="comment"># 3. 上传到 PyPI（需要注册账号）</span><br>$ twine upload dist/*<br><br><span class="comment"># 4. 验证安装</span><br>$ pip install logan-analyzer<br>$ logan --version</div><div class="tip" style="margin-top:4px;">💡 <strong>注意：</strong> PyPI 上传需要 <strong>唯一包名</strong>，建议先搜索 <code>pypi.org</code> 确认名称未被占用。</div><div class="warning" style="margin-top:4px;">⚠️ 如果不想公开，可以发布到 <strong>私有 PyPI</strong>（如公司内部），或直接 <strong>分发 wheel 文件</strong>。</div></div>'
+            },
+            // ===== 第24页 =====
+            {
+                title: '📊 测试覆盖率（可选）',
+                subtitle: '用 pytest-cov 统计测试覆盖率',
+                content: '<div><p style="font-size:15px; line-height:1.8;">安装和运行测试覆盖率：</p><div class="code-block" style="font-size:12px; max-height:200px; overflow-y:auto;"><span class="comment"># 安装</span><br>$ pip install pytest-cov<br><br><span class="comment"># 运行测试并生成覆盖率报告</span><br>$ pytest --cov=logan tests/<br><br><span class="comment"># 输出示例</span><br>---------- coverage: platform win32, python 3.10.13 ----------<br>Name                     Stmts   Miss  Cover<br>--------------------------------------------<br>src/logan/__init__.py       12      0   100%<br>src/logan/analyzer.py      156     12    92%<br>src/logan/cli.py            34      2    94%<br>--------------------------------------------<br>TOTAL                      202     14    93%<br><br><span class="comment"># 生成 HTML 覆盖率报告</span><br>$ pytest --cov=logan --cov-report=html tests/<br><span class="comment"># 打开 htmlcov/index.html 查看详细报告</span></div><div class="success" style="margin-top:4px;">✅ 测试覆盖率 <strong>> 90%</strong> 是高质量开源项目的标志。</div></div>'
+            },
+            // ===== 第25页 =====
+            {
+                title: '📅 明天预告 —— 第10天：演练项目讲解（面试准备）',
+                subtitle: '最后一天，打磨你的"项目故事"',
+                content: '<div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; padding:6px 0;"><div style="font-size:52px;">🎤</div><div><div style="font-size:20px; font-weight:600; color:#0b1e33;">第10天：演练项目讲解（面试准备）</div><div style="font-size:15px; color:#4b5563; line-height:1.8; margin-top:4px;"><strong>不再写代码，</strong> 专注做三件事：<br>① <strong>打磨 2 分钟项目介绍</strong> —— 让面试官快速记住你<br>② <strong>准备 6 个高频面试问答</strong> —— 对答如流<br>③ <strong>模拟面试演练</strong> —— 录屏回看，自我优化</div><div style="margin-top:6px; background:#e9edf4; border-radius:10px; padding:6px 14px; font-size:14px;">💡 预习任务：<em>准备好 GitHub 链接，用 2 分钟向别人介绍你的项目。</em></div></div></div><hr style="margin:12px 0 4px;"><div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:14px; color:#9ca3af;">📌 今天的内容都掌握了吗？推送 GitHub 后把链接发到群里。</span><span style="background:#2563eb; color:white; padding:4px 18px; border-radius:30px; font-size:13px; font-weight:600;">Day 9 ✅ 完成</span></div>'
+            }
+        ];
+
+        // ============================================================
+        // 翻页逻辑
+        // ============================================================
+
+        var current = 0;
+        var contentEl = document.getElementById('slideContent');
+        var prevBtn = document.getElementById('prevBtn');
+        var nextBtn = document.getElementById('nextBtn');
+        var indicator = document.getElementById('pageIndicator');
+
+        function render() {
+            var s = slides[current];
+            contentEl.innerHTML = '<span class="badge">📘 第 9 天</span><div class="slide-title">' + s.title + '</div><div class="slide-subtitle">' + s.subtitle + '</div><hr>' + s.content;
+            indicator.textContent = (current + 1) + ' / ' + slides.length;
+            prevBtn.disabled = (current === 0);
+            nextBtn.disabled = (current === slides.length - 1);
+            contentEl.scrollTop = 0;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') { e.preventDefault();
+                goTo(current - 1); }
+            if (e.key === 'ArrowRight') { e.preventDefault();
+                goTo(current + 1); }
+        });
+
+        function goTo(idx) {
+            if (idx < 0 || idx >= slides.length) return;
+            current = idx;
+            render();
+        }
+        prevBtn.addEventListener('click', function() { goTo(current - 1); });
+        nextBtn.addEventListener('click', function() { goTo(current + 1); });
+
+        render();
+    </script>
+</body>
+</html>

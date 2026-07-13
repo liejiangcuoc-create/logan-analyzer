@@ -48,7 +48,7 @@ Issues = "https://github.com/yourname/logan-analyzer/issues"
 where = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["test"]
 pythonpath = ["src"]
 addopts = "-v --tb=short"
 

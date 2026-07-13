@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import html
-import ipaddress
 import json
 import logging
 import os
@@ -22,14 +21,8 @@ def extract_ip(line: str) -> str | None:
     if not line:
         return None
 
-    for match in IP_PATTERN.finditer(line):
-        candidate = match.group(0)
-        try:
-            ipaddress.ip_address(candidate)
-        except ValueError:
-            continue
-        return candidate
-    return None
+    match = IP_PATTERN.search(line)
+    return match.group(0) if match else None
 
 
 def lines_from_file(filepath: str | os.PathLike[str], encoding: str = "utf-8") -> Iterator[tuple[int, str]]:
@@ -153,6 +146,11 @@ def _top5_rows(anomaly: list[dict[str, int | str]]) -> str:
             "</tr>"
         )
     return "\n".join(rows)
+
+
+def build_top5_rows(anomaly: list[dict[str, int | str]]) -> str:
+    """Return HTML table rows for the top five anomaly IPs."""
+    return _top5_rows(anomaly)
 
 
 def ensure_dir(filepath: str | os.PathLike[str]) -> None:

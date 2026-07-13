@@ -83,7 +83,7 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument("-c", "--config", help="配置文件路径，支持 YAML/JSON")
     parser.add_argument("-q", "--quiet", action="store_true", help="静默模式，只输出 warning 及以上日志")
     parser.add_argument("--log-level", choices=["DEBUG", "INFO", "WARNING", "ERROR"], default="INFO", help="日志级别")
-    parser.add_argument("--log-file", help="程序运行日志写入文件")
+    parser.add_argument("--log-file", dest="run_log_file", help="程序运行日志写入文件")
     parser.add_argument("--version", action="version", version=f"LogAn {VERSION}")
     return parser
 
@@ -133,7 +133,10 @@ def main(argv: list[str] | None = None) -> int:
         config = load_config(args.config)
         args = merge_config(args, parser, config)
 
-    setup_logging(args.log_level, args.quiet, args.log_file)
+    if not args.run_log_file and config.get("log_file"):
+        args.run_log_file = config.get("log_file")
+
+    setup_logging(args.log_level, args.quiet, args.run_log_file)
 
     log_file = Path(args.log_file)
     if not log_file.exists():

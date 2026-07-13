@@ -1,0 +1,71 @@
+Dec 10 04:30:12 server sshd[1234]: Failed password for root from 192.168.1.100 port 22
+Dec 10 04:30:15 server sshd[1234]: Failed password for root from 192.168.1.100 port 22
+Dec 10 04:30:18 server sshd[1234]: Failed password for admin from 10.0.0.55 port 22
+Dec 10 04:30:22 server sshd[1234]: Accepted password for alice from 192.168.1.50 port 22
+Dec 10 04:30:25 server sshd[1234]: Failed password for root from 192.168.1.100 port 22
+Dec 10 04:30:30 server sshd[1234]: Failed password for test from 10.0.0.55 port 22
+Dec 10 04:30:35 server sshd[1234]: Failed password for root from 172.16.0.88 port 22
+Dec 10 04:30:40 server sshd[1234]: Failed password for admin from 10.0.0.55 port 22
+Dec 10 04:30:45 server sshd[1234]: Accepted password for bob from 192.168.1.60 port 22
+Dec 10 04:30:50 server sshd[1234]: Failed password for root from 192.168.1.100 port 22
+Dec 10 04:30:55 server sshd[1234]: Failed password for root from 192.168.1.100 port 22
+Dec 10 04:31:00 server sshd[1234]: Failed password for oracle from 172.16.0.88 port 22
+Dec 10 04:31:05 server sshd[1234]: Failed password for root from 10.0.0.55 port 22
+Dec 10 05:00:01 server sshd[5678]: authentication failure; logname=root uid=0 euid=0 tty=ssh20:18:56 - INFO - 🚀 LogAn v2.0.0 启动
+20:18:56 - INFO - 📂 日志文件: sample.log
+20:18:56 - INFO - ⚙️ 阈值: 5
+20:18:56 - INFO - 🔗 启动生成器链: lines → filter → extract → whitelist → count
+20:18:56 - DEBUG - 第 14 行未找到 IP，已跳过
+20:18:56 - INFO - ✅ 共处理 11 条有效失败记录
+20:18:56 - INFO - 
+📊 统计结果:
+20:18:56 - INFO -   🔴 192.168.1.100 : 5 次
+20:18:56 - INFO -   🟢 10.0.0.55 : 4 次
+20:18:56 - INFO -   🟢 172.16.0.88 : 2 次
+20:18:56 - INFO - 
+🏆 Top 5 危险 IP:
+20:18:56 - INFO -   #1 192.168.1.100 : 5 次
+20:18:56 - INFO - 
+⏱️ 耗时 0.001s | 内存 0.14MB | 行数 11
+20:18:56 - INFO - ✅ 报告已生成：report.html
+20:18:56 - INFO - ✅ 分析完成
+20:32:16 - INFO - 🚀 LogAn v2.0.0 启动
+20:32:16 - INFO - 📂 日志文件: sample.log
+20:32:16 - INFO - ⚙️ 阈值: 5
+20:32:16 - INFO - 🔤 文件编码: utf-8
+20:32:16 - INFO - 📁 自动生成: ./reports\report_20260710_203216.html
+20:32:16 - INFO - 🔗 启动生成器链: lines → filter → extract → whitelist → count
+20:32:16 - DEBUG - 第 14 行未找到 IP，已跳过
+20:32:16 - INFO - ✅ 共处理 11 条有效失败记录
+20:32:16 - INFO - 
+📊 统计结果:
+20:32:16 - INFO -   🔴 192.168.1.100 : 5 次
+20:32:16 - INFO -   🟢 10.0.0.55 : 4 次
+20:32:16 - INFO -   🟢 172.16.0.88 : 2 次
+20:32:16 - INFO - 
+🏆 Top 5 危险 IP:
+20:32:16 - INFO -   #1 192.168.1.100 : 5 次
+20:32:16 - INFO - 
+⏱️ 耗时 0.001s | 内存 0.15MB | 行数 11
+20:32:16 - INFO - ✅ 报告已生成：./reports\report_20260710_203216.html
+20:32:16 - INFO - ✅ 分析完成
+21:00:03 - INFO - 🚀 LogAn v2.0.0 启动
+21:00:03 - INFO - 📂 日志文件: sample.log
+21:00:03 - INFO - ⚙️ 阈值: 5
+21:00:03 - INFO - 🔤 文件编码: utf-8
+21:00:03 - INFO - 📁 自动生成: ./reports\report_20260710_210003.html
+21:00:03 - INFO - 🔗 启动生成器链: lines → filter → extract → whitelist → count
+21:00:03 - DEBUG - 第 14 行未找到 IP，已跳过
+21:00:03 - INFO - ✅ 共处理 11 条有效失败记录
+21:00:03 - INFO - 
+📊 统计结果:
+21:00:03 - INFO -   🔴 192.168.1.100 : 5 次
+21:00:03 - INFO -   🟢 10.0.0.55 : 4 次
+21:00:03 - INFO -   🟢 172.16.0.88 : 2 次
+21:00:03 - INFO - 
+🏆 Top 5 危险 IP:
+21:00:03 - INFO -   #1 192.168.1.100 : 5 次
+21:00:03 - INFO - 
+⏱️ 耗时 0.001s | 内存 0.15MB | 行数 11
+21:00:03 - INFO - ✅ 报告已生成：./reports\report_20260710_210003.html
+21:00:03 - INFO - ✅ 分析完成

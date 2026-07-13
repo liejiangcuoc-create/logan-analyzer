@@ -1,16 +1,26 @@
+# config.yaml - LogAn 配置文件示例
+
+# 基础配置
 threshold: 8
-format: both
-output_dir: ./reports
-base_name: daily_report
 encoding: utf-8
+format: both
+
+# 输出配置
+output_dir: ./reports
+base_name: daily
+
+# 日志配置
 quiet: false
 log_level: INFO
 log_file: ./logs/logan.log
 
+# 白名单：这些 IP 的失败登录记录会被忽略
 whitelist:
   - 192.168.1.10
   - 10.0.0.1
+  - 172.16.0.5
 
+# 自定义关键字
 keywords:
   - "Failed password"
   - "authentication failure"
