@@ -1,0 +1,17 @@
+threshold: 8
+format: both
+output_dir: ./reports
+base_name: daily_report
+encoding: utf-8
+quiet: false
+log_level: INFO
+log_file: ./logs/logan.log
+
+whitelist:
+  - 192.168.1.10
+  - 10.0.0.1
+
+keywords:
+  - "Failed password"
+  - "authentication failure"
+  - "Invalid user"
