@@ -2,10 +2,15 @@
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-pytest-brightgreen.svg)](.github/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/coverage-90%25%2B-success.svg)](#测试)
+[![Tests](https://img.shields.io/badge/tests-pytest-brightgreen.svg)](https://github.com/liejiangcuoc-create/logan-analyzer/actions)
+[![Coverage](https://img.shields.io/badge/coverage-98%25-success.svg)](#测试)
 
 LogAn 是一个轻量级 SSH 登录失败日志分析工具，用于从服务器日志中统计失败登录来源 IP，识别疑似暴力破解行为，并生成 HTML/JSON 报告。
+
+## 作者
+
+- GitHub: [liejiangcuoc-create](https://github.com/liejiangcuoc-create)
+- Repository: [logan-analyzer](https://github.com/liejiangcuoc-create/logan-analyzer)
 
 ## 核心功能
 
@@ -24,10 +29,10 @@ LogAn 是一个轻量级 SSH 登录失败日志分析工具，用于从服务器
 
 ## 安装
 
-从源码安装：
+从 GitHub 克隆并安装：
 
 ```bash
-git clone https://github.com/yourname/logan-analyzer.git
+git clone https://github.com/liejiangcuoc-create/logan-analyzer.git
 cd logan-analyzer
 pip install .
 ```
@@ -108,10 +113,11 @@ pytest -v
 pytest --cov=logan --cov-report=term-missing
 ```
 
-生成 HTML 覆盖率报告：
+当前测试结果：
 
-```bash
-pytest --cov=logan --cov-report=html
+```text
+42 passed
+TOTAL 98%
 ```
 
 ## 项目结构
